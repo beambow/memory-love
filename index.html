@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Untuk Kamu ❤</title>
+<title>Untuk Kamu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;overflow:hidden;font-f
 @keyframes land{0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--r)) scale(1.45)}55%{opacity:1}100%{opacity:1;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}}
 @keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.15) translate(1.5%,-1.5%)}}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,rgba(20,0,10,.3) 30%,rgba(0,0,0,.75) 100%)}
-#c{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#c{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;will-change:transform}
 #fl{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4}
 #open{position:fixed;left:0;right:0;top:12%;text-align:center;font-family:var(--f2);font-size:clamp(16px,4.2vw,30px);letter-spacing:.3em;text-transform:uppercase;text-shadow:0 0 18px #ff4f9a,0 2px 10px #000;opacity:0;pointer-events:none;z-index:3;padding:0 20px}
 @keyframes op{0%{opacity:0;letter-spacing:.1em}25%,70%{opacity:1}100%{opacity:0;letter-spacing:.42em}}
@@ -29,7 +29,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;overflow:hidden;font-f
 .w{display:inline-block;white-space:nowrap;margin:0 .12em}
 .ch{display:inline-block;opacity:0;animation:ch .9s ease-out forwards}
 @keyframes ch{0%{opacity:0;transform:translateY(14px) scale(1.5)}100%{opacity:1;transform:none}}
-.fh{position:fixed;bottom:-40px;z-index:10;pointer-events:none;opacity:0;animation:rise var(--d) linear forwards;text-shadow:0 0 8px rgba(255,60,140,.8)}
+.fh{position:fixed;bottom:-40px;z-index:10;pointer-events:none;opacity:0;animation:rise var(--d) linear forwards}
 @keyframes rise{0%{transform:translate(0,0) scale(.6);opacity:0}12%{opacity:.9}100%{transform:translate(var(--x),-112vh) scale(1.25);opacity:0}}
 #st{position:fixed;inset:0;z-index:9;background:radial-gradient(circle at 50% 45%,#2a0716,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;transition:opacity 1s;text-align:center;padding:0 24px}
 #st.off{opacity:0;pointer-events:none}
@@ -62,7 +62,7 @@ html,body{height:100%;margin:0;background:#000;color:#fff;overflow:hidden;font-f
     <path d="M43 49q7 8 14 0" stroke="#7a1040" stroke-width="2.8" fill="none" stroke-linecap="round"/>
   </svg>
   <h1>Untuk Kamu</h1>
-  <p>ada kejutan kecil di dalam sini… 🥺</p>
+  <p>ada kejutan kecil di dalam sini…</p>
   <small>ketuk aku ya</small>
 </div>
 <audio id="a" src="musik.mp3" preload="auto"></audio>
@@ -77,8 +77,8 @@ const PESAN_DETIK = 30;                       // detik, pesan akhir muncul
 /* ======================================= */
 const $=id=>document.getElementById(id),R=Math.random,u=(a,b)=>a+R()*(b-a);
 const cv=$('c'),cx=cv.getContext('2d'),off=document.createElement('canvas'),ox=off.getContext('2d'),gl=document.createElement('canvas'),gx=gl.getContext('2d'),ph=$('ph'),au=$('a'),stage=$('stage'),fl=$('fl');
-let W,H,D,U,run=false,t0=0,tp=0,drawn=0,raf=0,shown=0,msgOn=false,imgs=[],pulse=0,fr=0,timers=[];
-const DUR=15000;
+let W,H,D,U,run=false,t0=0,tp=0,drawn=0,raf=0,shown=0,msgOn=false,imgs=[],pulse=0,fr=0,dirty=0,timers=[];
+const DUR=(MULAI_FOTO+(JUMLAH_FOTO-1)*JEDA)*1000+1500; // love selesai tepat saat foto terakhir mendarat
 
 /* Love: replika algoritma di video (10000 goresan isi + 3500 goresan tepi) */
 const S=[],hp=(a,s)=>[16*Math.sin(a)**3*s,(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a))*s];
@@ -86,11 +86,12 @@ for(let i=0;i<10000;i++){const a=u(0,2*Math.PI),[x,y]=hp(a,u(.5,15.5)),g=Math.at
   S.push([x,y,x+l*Math.cos(g),y+l*Math.sin(g),`rgb(255,${u(.25,.55)*255|0},${u(.65,.85)*255|0})`,u(.5,1.2)]);}
 for(let i=0;i<3500;i++){const a=u(0,2*Math.PI),[x,y]=hp(a,16),g=Math.atan2(y,x)+u(-.35,.35),l=u(10,32),x0=x+u(-2,2),y0=y+u(-2,2);
   S.push([x0,y0,x0+l*Math.cos(g),y0+l*Math.sin(g),`rgb(255,${u(.45,.75)*255|0},${u(.75,.95)*255|0})`,u(.4,.9)]);}
-function size(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=off.width=W*D;cv.height=off.height=H*D;gl.width=Math.max(8,W*D/8|0);gl.height=Math.max(8,H*D/8|0);U=Math.min(W/580,H/600);ox.lineCap='round';redraw();}
+function size(){D=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=off.width=W*D;cv.height=off.height=H*D;gl.width=Math.max(8,W*D/8|0);gl.height=Math.max(8,H*D/8|0);U=Math.min(W/580,H/600);ox.lineCap='round';redraw();}
 const sx=x=>(W/2+x*U)*D,sy=y=>(H/2-(y+41)*U)*D;
 function drawRange(a,b){for(let i=a;i<b;i++){const s=S[i];ox.strokeStyle=s[4];ox.lineWidth=Math.max(.7,s[5]*U*1.5)*D;ox.beginPath();ox.moveTo(sx(s[0]),sy(s[1]));ox.lineTo(sx(s[2]),sy(s[3]));ox.stroke();}}
 function glow(){gx.clearRect(0,0,gl.width,gl.height);gx.drawImage(off,0,0,gl.width,gl.height);}
-function redraw(){ox.clearRect(0,0,off.width,off.height);drawRange(0,drawn);glow();}
+function bake(){cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);cx.globalCompositeOperation='lighter';cx.globalAlpha=.9;cx.drawImage(gl,0,0,cv.width,cv.height);cx.drawImage(gl,0,0,cv.width,cv.height);cx.globalCompositeOperation='source-over';cx.globalAlpha=1;cx.drawImage(off,0,0);}
+function redraw(){ox.clearRect(0,0,off.width,off.height);drawRange(0,drawn);glow();bake();}
 
 /* Efek ringan (transform/opacity saja, aman untuk HP) */
 function impact(f,s){
@@ -98,10 +99,10 @@ function impact(f,s){
   stage.animate([{transform:'none'},{transform:`translate(${-6*s}px,${4*s}px) scale(${1+.015*s})`},{transform:`translate(${5*s}px,${-5*s}px)`},{transform:`translate(${-3*s}px,${2*s}px)`},{transform:'none'}],{duration:500+s*150,easing:'ease-out'});
   pulse=1;try{navigator.vibrate&&navigator.vibrate(s>1?[60,40,140]:35);}catch(e){}
 }
-function heart(){const s=document.createElement('span');s.className='fh';s.textContent=R()<.5?'♥':'❤';
+function heart(){const s=document.createElement('span');s.className='fh';s.textContent='♥';
   s.style.cssText=`left:${u(2,96)}%;font-size:${u(14,34)}px;color:hsl(${u(330,350)},100%,${u(65,80)}%);--d:${u(5,9)}s;--x:${u(-40,40)}px`;
   s.addEventListener('animationend',()=>s.remove());document.body.appendChild(s);}
-setInterval(()=>{if(!document.hidden&&document.querySelectorAll('.fh').length<12)heart();},650);
+setInterval(()=>{if(!document.hidden&&document.querySelectorAll('.fh').length<8)heart();},900);
 function burst(){for(let i=0;i<22;i++)timers.push(setTimeout(heart,i*70));}
 function typeMsg(){const m=$('msg');m.innerHTML='';let n=0;
   PESAN.split(' ').forEach(w=>{const sp=document.createElement('span');sp.className='w';[...w].forEach(c=>{const s=document.createElement('span');s.className='ch';s.textContent=c;s.style.animationDelay=(n++*.07)+'s';sp.appendChild(s);});m.appendChild(sp);n++;});
@@ -109,8 +110,12 @@ function typeMsg(){const m=$('msg');m.innerHTML='';let n=0;
 
 /* Muat foto: coba beberapa ekstensi (GitHub Pages membedakan huruf besar/kecil) */
 const EXT=['jpg','jpeg','png','webp','JPG','JPEG','PNG'];
-function loadOne(n){return new Promise(res=>{let i=0;(function t(){if(i>=EXT.length)return res(null);const src=`foto/${n}.${EXT[i++]}`,im=new Image();im.onload=()=>res(src);im.onerror=t;im.src=src;})();});}
-async function loadAll(){imgs=await Promise.all(Array.from({length:JUMLAH_FOTO},(_,i)=>loadOne(i+1)));}
+function loadOne(n){return new Promise(res=>{let i=0;(function t(){if(i>=EXT.length)return res(null);const src=`foto/${n}.${EXT[i++]}`,im=new Image();
+  im.onload=()=>{const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight));if(k>=1)return res(src);
+    const c=document.createElement('canvas');c.width=im.naturalWidth*k|0;c.height=im.naturalHeight*k|0;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    c.toBlob(b=>res(b?URL.createObjectURL(b):src),'image/jpeg',.88);};
+  im.onerror=t;im.src=src;})();});}
+async function loadAll(){imgs=[];const p=$('st').querySelector('p');for(let i=1;i<=JUMLAH_FOTO;i++){p.textContent=`menyiapkan kenangan ${i}/${JUMLAH_FOTO}`;imgs.push(await loadOne(i));}}
 
 /* Tumpukan foto: tiap foto menimpa yang sebelumnya sampai layar penuh, foto terakhir full */
 const POS=[[.5,.5],[.27,.27],[.73,.73],[.73,.27],[.27,.73],[.5,.18],[.5,.82],[.14,.5],[.86,.5]];
@@ -121,6 +126,7 @@ function addPhoto(i){
   if(last)c.style.cssText='left:50%;top:50%;width:100%;height:100%;--r:0deg';
   else{const p=POS[i%POS.length];c.style.cssText=`left:${p[0]*100}%;top:${p[1]*100}%;width:62%;height:62%;--r:${u(-6,6)}deg`;}
   ph.appendChild(c);
+  if(last)timers.push(setTimeout(()=>ph.querySelectorAll('.card:not(.full)').forEach(x=>x.remove()),2800)); // lepas foto di bawahnya agar HP tetap ringan
   timers.push(setTimeout(()=>{impact(last?.9:.4,last?2.2:1);if(last)burst();},last?1500:700));
 }
 
@@ -128,13 +134,11 @@ function frame(t){
   if(!run)return;
   const e=t-t0,dt=Math.min(64,t-tp);tp=t;fr++;
   const tg=Math.min(S.length,(e/DUR*S.length)|0);
-  if(tg>drawn){drawRange(drawn,tg);drawn=tg;if(fr%8===0||tg>=S.length)glow();}
+  if(tg>drawn){drawRange(drawn,tg);drawn=tg;dirty=1;}
+  if(dirty&&(fr%2===0||drawn>=S.length)){if(fr%8===0||drawn>=S.length)glow();bake();dirty=0;}
   pulse=Math.max(0,pulse-dt/650);
   const k=(drawn>=S.length?1+.04*Math.pow(Math.sin(e/1000*Math.PI*1.3)**2,6):1)+.1*pulse*pulse;
-  cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);
-  cx.translate(cv.width/2,cv.height/2);cx.scale(k,k);cx.translate(-cv.width/2,-cv.height/2);
-  cx.globalCompositeOperation='lighter';cx.globalAlpha=.9;cx.drawImage(gl,0,0,cv.width,cv.height);cx.drawImage(gl,0,0,cv.width,cv.height);
-  cx.globalCompositeOperation='source-over';cx.globalAlpha=1;cx.drawImage(off,0,0);
+  cv.style.transform=`scale(${k})`;
   while(shown<JUMLAH_FOTO&&e/1000>=MULAI_FOTO+shown*JEDA)addPhoto(shown++);
   if(!msgOn&&e/1000>=PESAN_DETIK){msgOn=true;typeMsg();}
   if(e/1000>=PESAN_DETIK+5)$('rp').classList.add('on');
@@ -143,7 +147,7 @@ function frame(t){
 function start(){
   cancelAnimationFrame(raf);timers.forEach(clearTimeout);timers=[];
   ph.innerHTML='';$('msg').innerHTML='';$('shade').classList.remove('on');$('rp').classList.remove('on');
-  shown=0;drawn=0;msgOn=false;pulse=0;ox.clearRect(0,0,off.width,off.height);glow();
+  shown=0;drawn=0;msgOn=false;pulse=0;dirty=0;ox.clearRect(0,0,off.width,off.height);glow();bake();
   const o=$('open');o.textContent=PEMBUKA;o.style.animation='none';o.offsetWidth;o.style.animation='op 4s ease forwards';
   au.currentTime=0;au.play().catch(()=>{});
   t0=tp=performance.now();run=true;raf=requestAnimationFrame(frame);
